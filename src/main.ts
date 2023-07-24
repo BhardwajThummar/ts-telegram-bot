@@ -61,7 +61,15 @@ bot.on('callback_query', (callbackQuery: CallbackQuery) => {
     if (!subMenuNumber) {
         bot.sendMessage(chatId!, 'This is the sub menu (SM)', { reply_markup: generateSubMenuButtons(menuNumber!) });
     } else if (!subSubMenuNumber) {
-        bot.sendMessage(chatId!, 'This is the sub-sub menu (SSM) and the end.', { reply_markup: generateSubSubMenuButtons(menuNumber!, subMenuNumber!) });
+        bot.addListener('message', (msg: Message) => {
+            let response: string = `\nUser's ID : ${msg.from?.id}\nUser's Username : ${msg.from?.username}\nMessage ID : ${msg.message_id}\nMessage text : ${msg.text}\nMessage date : ${new Date(msg.date)}\n`;
+            bot.sendMessage(chatId!, response, {
+                reply_markup: generateSubSubMenuButtons(menuNumber!, subMenuNumber!)
+            });
+        });
+        bot.sendMessage(chatId!, 'This is the sub-sub menu (SSM) and the end.', {
+            reply_markup: generateSubSubMenuButtons(menuNumber!, subMenuNumber!)
+        });
     } else {
         bot.sendMessage(chatId!, 'This is the main menu (MM)', { reply_markup: generateMainMenuButtons() });
     }
